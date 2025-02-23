@@ -23,20 +23,20 @@ class ActivityDataBase {
         `);
 
         // Insert default data only if the table is empty
-        const activities = await this.db.getAllAsync<Activity>("SELECT * FROM activities;");
-        if (activities.length === 0) {
-            await this.db.runAsync(`
-                INSERT INTO activities (activity, type, set_on, due_on, deletion_date) 
-                VALUES 
-                ('Visit Jill', 'task', ?, ?, ?),
-                ('Cook a meal', 'task', ?, ?, ?),
-                ('Clean the house', 'task', ?, ?, ?)
-            `, 
-                new Date().toISOString(), new Date(Date.now() + 5 * 86400000).toISOString(), new Date(Date.now() + 10 * 86400000).toISOString(),
-                new Date().toISOString(), new Date(Date.now() + 5 * 86400000).toISOString(), new Date(Date.now() + 10 * 86400000).toISOString(),
-                new Date().toISOString(), new Date(Date.now() + 5 * 86400000).toISOString(), new Date(Date.now() + 10 * 86400000).toISOString()
-            );
-        }
+        // const activities = await this.db.getAllAsync<Activity>("SELECT * FROM activities;");
+        // if (activities.length === 0) {
+        //     await this.db.runAsync(`
+        //         INSERT INTO activities (activity, type, set_on, due_on, deletion_date) 
+        //         VALUES 
+        //         ('Visit Jill', 'task', ?, ?, ?),
+        //         ('Cook a meal', 'task', ?, ?, ?),
+        //         ('Clean the house', 'task', ?, ?, ?)
+        //     `, 
+        //         new Date().toISOString(), new Date(Date.now() + 5 * 86400000).toISOString(), new Date(Date.now() + 10 * 86400000).toISOString(),
+        //         new Date().toISOString(), new Date(Date.now() + 5 * 86400000).toISOString(), new Date(Date.now() + 10 * 86400000).toISOString(),
+        //         new Date().toISOString(), new Date(Date.now() + 5 * 86400000).toISOString(), new Date(Date.now() + 10 * 86400000).toISOString()
+        //     );
+        // }
     }
 
     async fetchActivities(): Promise<Activity[]> {
@@ -45,16 +45,14 @@ class ActivityDataBase {
         `);
     }
 
-    async addActivity(activity: Activity) {
+    async addActivity(activity : string,type :string,due_on:string) {
         await this.db.runAsync(`
             INSERT INTO activities (activity, type, set_on, due_on, deletion_date)
             VALUES (?, ?, ?, ?, ?);
         `, 
-            activity.activity, 
-            activity.type, 
-            activity.set_on, 
-            activity.due_on, 
-            activity.delete_on
+            activity, 
+            type, 
+            due_on, 
         );
     }
 

@@ -1,5 +1,5 @@
-import { StyleSheet, TextInput, TouchableHighlight } from "react-native";
-
+import { StyleSheet, TextInput, TouchableHighlight, Modal } from "react-native";
+import ActivityModal from "@/components/activityModal";
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import ActivityList from "@/components/activitiesList";
@@ -7,7 +7,10 @@ import { useState } from "react";
 
 export default function TabOneScreen() {
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const closeModal = () => {
+    setModalVisible(false);
+  };
   return (
     <View style={styles.container}>
       {/* Search and add events */}
@@ -18,9 +21,18 @@ export default function TabOneScreen() {
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
-        <TouchableHighlight>
+        <TouchableHighlight onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableHighlight>
+        <Modal
+          visible={modalVisible}
+          // animationType="slide"
+          transparent={true}
+          onRequestClose={closeModal}
+          style={styles.modal}
+        >
+          <ActivityModal closeModal={closeModal} />
+        </Modal>
       </View>
       {/* Activities list */}
       <ActivityList />
@@ -62,5 +74,8 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 30,
     marginTop: 30,
+  },
+  modal: {
+    flex: 1,
   },
 });
