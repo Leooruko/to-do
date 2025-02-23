@@ -2,40 +2,40 @@ import { View, Text, StyleSheet } from "react-native";
 import { Activity } from "@/constants/interfaceList";
 import db from "@/lib/actions";
 import { useEffect, useState } from "react";
-
+import { getActivities } from "@/common/activities/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/store";
 export default function ActivityList() {
-  const database = db;
   // let activities;
-  const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const activities = useSelector((state: RootState) =>
+    Array.isArray(state.activities.activities)
+      ? state.activities.activities
+      : []
+  );
+  const dispatch = useDispatch();
   useEffect(() => {
-    async function getActivities() {
-      try {
-        setActivities(await database.fetchActivities());
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setLoading(false);
-      }
-    }
     getActivities();
-  }, []);
+    setLoading(false);
+  }, [dispatch]);
   return (
     <View className="container">
       {/* Title */}
       <Text style={styles.title}>Activities</Text>
       {loading ? (
         <Text>Loading...</Text>
-      ) : activities.length > 0 ? (
-        activities.map((activity: Activity) => {
-          return (
-            <View key={activity.activity} style={styles.activity}>
-              <Text>{activity.type}</Text>
-              <Text>{activity.activity}</Text>
-              <Text>{new Date(activity.set_on).toDateString()}</Text>
-            </View>
-          );
-        })
+      ) : Array.isArray(activities) && activities.length > 0 ? (
+        activities
+          ?.filter((activity): activity is Activity => activity !== null)
+          .map((activity) => {
+            return (
+              <View key={activity.activity} style={styles.activity}>
+                <Text>{activity.type}</Text>
+                <Text>{activity.activity}</Text>
+                <Text>{new Date(activity.due_on).toDateString()}</Text>
+              </View>
+            );
+          })
       ) : (
         <Text>No activities</Text>
       )}

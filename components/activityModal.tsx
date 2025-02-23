@@ -17,6 +17,8 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import db from "@/lib/actions";
+import { useDispatch } from "react-redux";
+import { addActivity } from "@/common/activities/actions";
 
 const { width, height } = Dimensions.get("window");
 
@@ -27,6 +29,8 @@ export default function ActivityModal({
   details?: Activity;
   closeModal: () => void;
 }) {
+  const dispatch = useDispatch();
+
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -34,7 +38,7 @@ export default function ActivityModal({
     details || {
       activity: null,
       type: null,
-      due_on: null,
+      due_on: new Date(Date.now()).toString(),
     }
   );
   const handleChange = (key: keyof Activity, value: string | null) => {
@@ -82,8 +86,11 @@ export default function ActivityModal({
           activityDetails.type || "",
           activityDetails.due_on || ""
         );
+        dispatch(addActivity(activityDetails));
       } catch (e) {
         console.log(e);
+      } finally {
+        closeModal();
       }
     }
     console.log(activityDetails);

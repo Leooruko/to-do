@@ -10,7 +10,6 @@ class ActivityDataBase {
 
     async init() {
         this.db = await SQLite.openDatabaseAsync('activities');
-
         await this.db.execAsync(`
             CREATE TABLE IF NOT EXISTS activities(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
