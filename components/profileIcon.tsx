@@ -1,14 +1,10 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Image, View, StyleSheet } from "react-native";
 export default function ProfileTag() {
   return (
     <>
       <View style={styles.container}>
-        <Image
-          style={styles.image}
-          source={require("../assets/images/profile.png")}
-          width={10}
-          height={10}
-        />
+        <Ionicons name="settings" color={"#333"} size={30}></Ionicons>
       </View>
     </>
   );
@@ -20,10 +16,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 5,
+    marginRight: 10,
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
     resizeMode: "cover",
     borderRadius: 25,
     backgroundPosition: "center",

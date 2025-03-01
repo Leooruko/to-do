@@ -1,4 +1,10 @@
-import { StyleSheet, TextInput, TouchableHighlight, Modal } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableHighlight,
+  Modal,
+  TouchableNativeFeedback,
+} from "react-native";
 import ActivityModal from "@/components/activityModal";
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
@@ -15,15 +21,17 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       {/* Search and add events */}
       <View style={styles.buttonContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search activities..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-        <TouchableHighlight onPress={() => setModalVisible(true)}>
-          <Text style={styles.buttonText}>+</Text>
-        </TouchableHighlight>
+        <View style={styles.inputOutline}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search activities..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+        <TouchableNativeFeedback onPress={() => setModalVisible(true)}>
+          <Text style={styles.buttonText}>Add+</Text>
+        </TouchableNativeFeedback>
         <Modal
           visible={modalVisible}
           // animationType="slide"
@@ -52,21 +60,34 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   searchInput: {
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    borderRadius: 5,
+    // paddingHorizontal: 10,
+    borderRadius: 15,
+    paddingLeft: 10,
+  },
+  inputOutline: {
     flex: 1,
+    elevation: 2,
+    borderRadius: 15,
+    shadowOffset: { width: 4, height: 0 },
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
+    justifyContent: "center",
+    backgroundColor: "white",
   },
   buttonText: {
-    fontSize: 30,
-    backgroundColor: "dodgerblue",
-    borderRadius: 7,
+    fontSize: 20,
+    backgroundColor: "rgba(180, 185, 244, 0.77)",
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+    shadowOpacity: 0.2,
+    borderRadius: 18,
     textAlign: "center",
-    aspectRatio: 1,
+    // aspectRatio: 1,
+    flexGrow: 0.1,
     verticalAlign: "middle",
-    padding: 5,
-    color: "white",
+    color: "purple",
+    justifyContent: "center",
+    display: "flex",
   },
   buttonContainer: {
     display: "flex",

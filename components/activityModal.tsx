@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableHighlight,
+  Touchable,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker, {
@@ -19,6 +20,7 @@ import DateTimePicker, {
 import db from "@/lib/actions";
 import { useDispatch } from "react-redux";
 import { addActivity } from "@/common/activities/actions";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,7 +28,7 @@ export default function ActivityModal({
   details,
   closeModal,
 }: {
-  details?: Activity;
+  details?: Activity | null;
   closeModal: () => void;
 }) {
   const dispatch = useDispatch();
@@ -38,7 +40,10 @@ export default function ActivityModal({
     details || {
       activity: null,
       type: null,
-      due_on: new Date(Date.now()).toString(),
+      due_on: new Date(Date.now() + 5).toString(),
+      set_on: new Date(Date.now()).toString(),
+      delete_on: null,
+      id: null,
     }
   );
   const handleChange = (key: keyof Activity, value: string | null) => {
@@ -78,15 +83,26 @@ export default function ActivityModal({
       handleChange("due_on", newTime.toISOString());
     }
   };
+
+  const updateActivity = (aactivityDetails: Activity) => {
+    try {
+    } catch {}
+  };
+
   const handleSave = () => {
-    if (Object.values(activityDetails).every((value) => value !== null)) {
+    const requiredKeys = ["activity", "type", "due_on"];
+    if (requiredKeys.every((key: string) => activityDetails[key] !== null)) {
       try {
-        db.addActivity(
-          activityDetails.activity || "",
-          activityDetails.type || "",
-          activityDetails.due_on || ""
-        );
-        dispatch(addActivity(activityDetails));
+        if (details) {
+          updateActivity(activityDetails);
+        } else {
+          db.addActivity(
+            activityDetails.activity || "",
+            activityDetails.type || "",
+            activityDetails.due_on || ""
+          );
+          dispatch(addActivity(activityDetails));
+        }
       } catch (e) {
         console.log(e);
       } finally {
@@ -103,11 +119,14 @@ export default function ActivityModal({
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View style={styles.modalContent}>
-          <Text style={styles.title}>Add activity</Text>
+          <View style={styles.title}>
+            <Text style={styles.titleText}>activity</Text>
+            <Text style={styles.titleText}>{details && details.id}</Text>
+          </View>
           <TextInput
             style={styles.input}
             placeholder="Activity...e.g visit Jill"
-            // value={activityDetails?.activity ?? ""}
+            value={activityDetails?.activity ?? ""}
             onChangeText={(value) => handleChange("activity", value)}
           />
           <View style={styles.pickerContainer}>
@@ -133,7 +152,17 @@ export default function ActivityModal({
                 ).getFullYear()}`}
               </Text>
             </Text>
-            <Button title="Set Date" onPress={() => setShowDatePicker(true)} />
+            <TouchableHighlight
+              style={{
+                backgroundColor: "rgba(180, 185, 244, 0.5)",
+                padding: 2,
+                paddingInline: 8,
+                borderRadius: 4,
+              }}
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Text style={{ color: "gray" }}>Set Date</Text>
+            </TouchableHighlight>
           </View>
           {showDatePicker && (
             <DateTimePicker
@@ -160,11 +189,17 @@ export default function ActivityModal({
                   : "AM"
               }`}
             </Text>
-            <Button
-              color={""}
-              title="Set Time"
+            <TouchableHighlight
+              style={{
+                backgroundColor: "rgba(180, 185, 244, 0.5)",
+                padding: 2,
+                paddingInline: 8,
+                borderRadius: 4,
+              }}
               onPress={() => setShowTimePicker(true)}
-            />
+            >
+              <Text style={{ color: "gray" }}>SetTime</Text>
+            </TouchableHighlight>
           </View>
           {showTimePicker && (
             <DateTimePicker
@@ -180,10 +215,69 @@ export default function ActivityModal({
           )}
           <View style={styles.actions}>
             <View style={{ flex: 1, marginRight: 5 }}>
-              <Button title="Save" color="green" onPress={handleSave} />
+              <TouchableHighlight
+                onPress={handleSave}
+                style={{
+                  backgroundColor: "rgba(180, 185, 244, 0.53)",
+                  borderRadius: 15,
+                }}
+              >
+                <View
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    gap: 10,
+                    padding: 5,
+                  }}
+                >
+                  <Ionicons name="calendar" color={"black"} size={25} />
+                  <Text
+                    style={{
+                      verticalAlign: "middle",
+                      color: "black",
+                    }}
+                  >
+                    Save
+                  </Text>
+                </View>
+              </TouchableHighlight>
             </View>
-            <View style={{ flex: 1, marginLeft: 5 }}>
-              <Button title="Cancel" color="red" onPress={closeModal} />
+            <View
+              style={{
+                flex: 1,
+                marginLeft: 5,
+              }}
+            >
+              <TouchableHighlight
+                onPress={closeModal}
+                style={{
+                  backgroundColor: "whitesmoke",
+                  borderRadius: 15,
+                }}
+              >
+                <View
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    gap: 10,
+                    padding: 5,
+                  }}
+                >
+                  <Ionicons name="close" color={"gray"} size={30} />
+                  <Text
+                    style={{
+                      verticalAlign: "middle",
+                      color: "gray",
+                    }}
+                  >
+                    Cancel
+                  </Text>
+                </View>
+              </TouchableHighlight>
             </View>
           </View>
         </View>
@@ -220,8 +314,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   title: {
-    fontSize: 30,
-    color: "green",
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  titleText: {
+    fontSize: 20,
+    color: "rgba(180, 185, 244, 0.77)",
   },
   actions: {
     display: "flex",
