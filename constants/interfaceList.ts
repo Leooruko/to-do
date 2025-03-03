@@ -1,6 +1,6 @@
 export type Activity = {
     [key: string]: any;
-    id:number | null,
+    id:string | null,
     activity: string | null;
     type: string | null;
     set_on: string | null;

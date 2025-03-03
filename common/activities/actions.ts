@@ -1,4 +1,4 @@
-import { ADD_ACTIVITY, GET_ACTIVITIES_FAILURE, GET_ACTIVITIES_LOADING } from "./constants";
+import { ADD_ACTIVITY, GET_ACTIVITIES_FAILURE, GET_ACTIVITIES_LOADING, UPDATE_ACTIVITY } from "./constants";
 import db from "@/lib/actions";
 import { Activity } from "@/constants/interfaceList";
 import { AppDispatch } from "@/store";
@@ -26,6 +26,12 @@ export const getActivitiesSuccess = (payload:Array<Activity> | Activity | null) 
 export const addActivity = (payload:Activity)=>(
     {
         type:ADD_ACTIVITY,
+        payload
+    }
+)
+export const changeActivity = (payload:Activity) =>(
+    {
+        type:UPDATE_ACTIVITY,
         payload
     }
 )

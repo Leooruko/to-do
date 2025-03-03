@@ -44,11 +44,12 @@ class ActivityDataBase {
         `);
     }
 
-    async addActivity(activity : string,type :string,due_on:string) {
+    async addActivity(id:string,activity : string,type :string,due_on:string) {
         await this.db.runAsync(`
-            INSERT INTO activities (activity, type, set_on, due_on, deletion_date)
-            VALUES (?, ?, ?, ?, ?);
+            INSERT INTO activities (id,activity, type, set_on, due_on, deletion_date)
+            VALUES (?, ?, ?, ?, ?,?);
         `, 
+            id,
             activity, 
             type, 
             due_on, 
@@ -59,16 +60,15 @@ class ActivityDataBase {
         try {
             await this.db.runAsync(`
                 UPDATE activities 
-                SET activity=?, type=?, set_on=?, due_on=?, deletion_date=? 
-                WHERE id=?;
+                SET activity=?, type=?, due_on=?
+                WHERE activity=?;
             `, 
                 activity.activity, 
-                activity.type, 
-                activity.set_on, 
-                activity.due_on, 
-                activity.delete_on, 
-                activity.id
-            );
+                activity.type,   
+                activity.due_on,
+                activity.activity                                        
+                             
+            );            
         } catch (error) {
             console.error('Error updating activity:', error);
         }

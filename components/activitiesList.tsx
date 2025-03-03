@@ -20,7 +20,7 @@ export default function ActivityList() {
   const [loading, setLoading] = useState(true);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selection, setSelection] = useState<Set<string>>(new Set());
-  const [selected, setSelected] = useState<Activity | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const activities = useSelector((state: RootState) =>
     Array.isArray(state.activities.activities)
       ? state.activities.activities
@@ -33,33 +33,33 @@ export default function ActivityList() {
     setLoading(false);
   }, [dispatch]);
 
-  function selectItem(activity: Activity | null) {
-    if (activity && !selectionMode) {
+  function selectItem(id: string | null) {
+    if (id && !selectionMode) {
       setSelectionMode(true);
       if (selection.size === 0) {
-        setSelected(activity);
+        setSelected(id);
       } else {
         setSelected(null);
       }
       setSelection((prev) => {
         const newSelection = new Set(prev);
-        activity.activity !== null && newSelection.add(activity.activity);
+        id !== null && newSelection.add(id);
         return newSelection;
       });
     }
   }
-  function AddSelection(activity: string | null) {
-    if (activity && selectionMode) {
-      if (!selection.has(activity)) {
+  function AddSelection(id: string | null) {
+    if (id && selectionMode) {
+      if (!selection.has(id)) {
         setSelection((prev) => {
           const newSelection = new Set(prev);
-          newSelection.add(activity);
+          newSelection.add(id);
           return newSelection;
         });
       } else {
         if (selection.size === 1) setSelectionMode(false);
         const newSelection = new Set(selection);
-        newSelection.delete(activity);
+        newSelection.delete(id);
         setSelection(newSelection);
       }
     }
@@ -115,12 +115,12 @@ export default function ActivityList() {
           }
           renderItem={({ item: activity }) => (
             <TouchableOpacity
-              onLongPress={() => selectItem(activity)}
-              onPress={() => AddSelection(activity?.activity)}
+              onLongPress={() => selectItem(activity.id)}
+              onPress={() => AddSelection(activity?.id)}
               style={[
                 getActivityStyle(activity?.type || "default"),
                 selectionMode &&
-                  (!selection.has(activity.activity ?? "")
+                  (!selection.has(activity.id ?? "")
                     ? styles.unselected
                     : styles.selected),
               ]}
@@ -139,7 +139,17 @@ export default function ActivityList() {
         onRequestClose={closeModal}
         style={styles.modal}
       >
-        <ActivityModal closeModal={closeModal} details={selected} />
+        <ActivityModal
+          closeModal={closeModal}
+          details={
+            activities?.find(
+              (activity): activity is Activity =>
+                activity !== null &&
+                !Array.isArray(activity) &&
+                activity.id === selected
+            ) || null
+          }
+        />
       </Modal>
     </View>
   );

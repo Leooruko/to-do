@@ -19,8 +19,9 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 import db from "@/lib/actions";
 import { useDispatch } from "react-redux";
-import { addActivity } from "@/common/activities/actions";
+import { addActivity, changeActivity } from "@/common/activities/actions";
 import { Ionicons } from "@expo/vector-icons";
+import { generateUniqueId } from "@/constants/utils";
 
 const { width, height } = Dimensions.get("window");
 
@@ -84,19 +85,26 @@ export default function ActivityModal({
     }
   };
 
-  const updateActivity = (aactivityDetails: Activity) => {
+  const updateActivity = (activityDetails: Activity) => {
     try {
-    } catch {}
+      db.modifyActivity(activityDetails);
+      dispatch(changeActivity(activityDetails));
+    } catch (e) {
+      console.log("error dispatching: ", e);
+    }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const requiredKeys = ["activity", "type", "due_on"];
     if (requiredKeys.every((key: string) => activityDetails[key] !== null)) {
       try {
         if (details) {
           updateActivity(activityDetails);
         } else {
+          console.log("NO LOGS");
+          activityDetails.id = await generateUniqueId();
           db.addActivity(
+            activityDetails.id,
             activityDetails.activity || "",
             activityDetails.type || "",
             activityDetails.due_on || ""
@@ -108,8 +116,8 @@ export default function ActivityModal({
       } finally {
         closeModal();
       }
+    } else {
     }
-    console.log(activityDetails);
   };
 
   return (
