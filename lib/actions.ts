@@ -83,6 +83,19 @@ class ActivityDataBase {
             console.log(e);
         }
     }
+    async deleteActivity(id:string){
+        try{
+            await this.db.runAsync(
+                `
+                    DELETE FROM Activities WHERE id=?;
+                `,
+                id
+            )
+        }
+        catch (e){
+            console.log("Errorr deleting Activity",e)
+        }
+    }
 }
 
 const db = new ActivityDataBase();

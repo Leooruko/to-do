@@ -23,8 +23,8 @@ export function ActivitiesReducer (state = initialState ,action:ActivityAction){
             return {...state,loading:false,error:error}
         case ADD_ACTIVITY:
             return {...state,activities:[...state.activities,payload]}
-        case REMOVE_ACTIVITY:
-            return{...state,activities:[...state.activities.filter((activity)=>activity !== payload)]}
+        case REMOVE_ACTIVITY:            
+            return{...state,activities: state.activities.filter((activity: Activity) => activity.id !== payload)}
         case UPDATE_ACTIVITY:
             return{...state,activities:[...state.activities.map((activity:Activity)=>{
                 if(payload && !Array.isArray(payload) && activity.id === payload.id){
@@ -32,7 +32,6 @@ export function ActivitiesReducer (state = initialState ,action:ActivityAction){
                     return {...activity,...payload}
                 }
                 else{
-                    console.log("GONE")
                     return activity
                 }
             })]}            

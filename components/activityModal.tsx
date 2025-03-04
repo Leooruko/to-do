@@ -129,7 +129,7 @@ export default function ActivityModal({
         <View style={styles.modalContent}>
           <View style={styles.title}>
             <Text style={styles.titleText}>activity</Text>
-            <Text style={styles.titleText}>{details && details.id}</Text>
+            {/* <Text style={styles.titleText}>{details && details.id}</Text> */}
           </View>
           <TextInput
             style={styles.input}

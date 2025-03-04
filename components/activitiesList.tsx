@@ -9,7 +9,7 @@ import {
 import { Activity } from "@/constants/interfaceList";
 import db from "@/lib/actions";
 import { useEffect, useState } from "react";
-import { getActivities } from "@/common/activities/actions";
+import { getActivities, removeActivity } from "@/common/activities/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/store";
 import { Ionicons } from "@expo/vector-icons";
@@ -90,7 +90,21 @@ export default function ActivityList() {
         <Text style={styles.title}>Activities</Text>
         {selectionMode && (
           <View style={styles.crudActions}>
-            <Ionicons name="trash" size={25} color={"red"} />
+            <Ionicons
+              name="trash"
+              size={25}
+              color={"red"}
+              onPress={() => {
+                if (selection) {
+                  selection.forEach((id) => {
+                    dispatch(removeActivity(id));
+                    db.deleteActivity(id);
+                  });
+                  setSelection(new Set());
+                  setSelectionMode(false);
+                }
+              }}
+            />
             {selection.size === 1 && (
               <Ionicons
                 name="pencil"

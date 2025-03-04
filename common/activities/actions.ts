@@ -1,4 +1,4 @@
-import { ADD_ACTIVITY, GET_ACTIVITIES_FAILURE, GET_ACTIVITIES_LOADING, UPDATE_ACTIVITY } from "./constants";
+import { ADD_ACTIVITY, GET_ACTIVITIES_FAILURE, GET_ACTIVITIES_LOADING, REMOVE_ACTIVITY, UPDATE_ACTIVITY } from "./constants";
 import db from "@/lib/actions";
 import { Activity } from "@/constants/interfaceList";
 import { AppDispatch } from "@/store";
@@ -35,6 +35,14 @@ export const changeActivity = (payload:Activity) =>(
         payload
     }
 )
+
+export const removeActivity = (payload:string) =>(
+    {
+        type:REMOVE_ACTIVITY,
+        payload
+    }
+)
+
 export const addActivityToDatabase = (activity:Activity) =>async (dispatch:AppDispatch) =>{
     try{
 
