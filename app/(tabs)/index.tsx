@@ -10,7 +10,7 @@ import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import ActivityList from "@/components/activitiesList";
 import { useState } from "react";
-
+import { useTheme } from "@/constants/themeContext";
 export default function TabOneScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -18,9 +18,16 @@ export default function TabOneScreen() {
     setModalVisible(false);
   };
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, useTheme().theme.dark && styles.darkBackground]}
+    >
       {/* Search and add events */}
-      <View style={styles.buttonContainer}>
+      <View
+        style={[
+          styles.buttonContainer,
+          useTheme().theme.dark && styles.darkBackground,
+        ]}
+      >
         <View style={styles.inputOutline}>
           <TextInput
             style={styles.searchInput}
@@ -30,7 +37,14 @@ export default function TabOneScreen() {
           />
         </View>
         <TouchableNativeFeedback onPress={() => setModalVisible(true)}>
-          <Text style={styles.buttonText}>Add+</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              useTheme().theme.dark && styles.darkText,
+            ]}
+          >
+            Add+
+          </Text>
         </TouchableNativeFeedback>
         <Modal
           visible={modalVisible}
@@ -76,7 +90,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    backgroundColor: "rgba(180, 185, 244, 0.77)",
+    backgroundColor: "dodgerblue",
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
     shadowOpacity: 0.2,
@@ -85,7 +99,7 @@ const styles = StyleSheet.create({
     // aspectRatio: 1,
     flexGrow: 0.1,
     verticalAlign: "middle",
-    color: "purple",
+    color: "white",
     justifyContent: "center",
     display: "flex",
   },
@@ -98,5 +112,11 @@ const styles = StyleSheet.create({
   },
   modal: {
     flex: 1,
+  },
+  darkBackground: {
+    backgroundColor: "rgba(0, 0, 0,0.9)",
+  },
+  darkText: {
+    color: "white",
   },
 });

@@ -10,7 +10,19 @@ export default function ActivityCard({ activity }: { activity: Activity }) {
       <Text style={[styles.name, getNameStyle(activity?.type || "default")]}>
         {activity.activity}
       </Text>
-      <Text style={styles.type}>{activity.type}</Text>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text style={styles.type}>{activity.type}</Text>
+        <View style={{ alignSelf: "flex-end" }}>
+          <Text>{new Date(activity.due_on).toLocaleDateString()}</Text>
+          <Text>{new Date(activity.due_on).toLocaleTimeString()}</Text>
+        </View>
+      </View>
     </View>
   );
 }

@@ -40,7 +40,7 @@ export default function TabLayout() {
           headerTitleAlign: "center",
           tabBarIcon: ({ color }) => <Ionicons name="checkmark-circle-sharp" />,
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href="/settings" asChild>
               <Pressable>{({ pressed }) => <ProfileTag />}</Pressable>
             </Link>
           ),
